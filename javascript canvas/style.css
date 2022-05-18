@@ -1,0 +1,23 @@
+body {
+    display: flex;
+    /*margin-left: 10%;
+    margin-right: 10%;*/
+    align-items: top;
+    background-image: url("./program images/Football pitch.jpeg");
+  }
+  
+
+  
+  #canvas {
+    display: flex; /* Flex ger ett rutmönster */
+    flex-direction: row;
+    justify-content: center; /* Centrering på raden, dvs horisontellt */
+    align-items: center;
+    /* width: 80%; */
+    width: 1880px;
+    height: 950px;
+    border: solid;
+    border-width: 4px;
+    border-color: black;
+  }
+  
