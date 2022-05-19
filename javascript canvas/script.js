@@ -1,4 +1,4 @@
-// Inleder med att deklarera saker för canvas samt hämtar information från en annan JS fil för att inte ha listor härs
+// inleder med att deklarera saker för canvas samt hämtar information från en annan JS fil för att inte ha listor härs
 
 import * as pFact from './Player information.js'
 
@@ -9,15 +9,15 @@ canvas.height = window.innerHeight;
 
 let c = canvas.getContext("2d");
 
-//Deklarerar vaiabler som har koll på vilken bild som är aktiva
+// deklarerar vaiabler som har koll på vilken bild som är aktiva
 var rightImage;
 var leftImage;
 
-//Variabel som räknar poäng
+// variabel som räknar poäng
 let scoreCount = 0;
 
-// Klassen Button är till för att göra en "higher" knapp och en "lower" knapp  
-// De har samma funktioner, därmed ändras postion och färger med variabler som deklareras när de ritas ut
+// klassen Button är till för att göra en "higher" knapp och en "lower" knapp  
+// de har samma funktioner, därmed ändras postion och färger med variabler som deklareras när de ritas ut
 class Button {
     constructor(xpoint, ypoint, height, width){
         this.xpoint = xpoint;
@@ -26,7 +26,7 @@ class Button {
         this.width = width;
     }
 
-    //ritar ut knappen
+    // ritar ut knappen
     draw(typeOfButton){
         var xposition = this.xpoint;
         var yposition = this.ypoint;
@@ -36,25 +36,25 @@ class Button {
             c.drawImage(button, xposition, yposition);
         }
     }
-    //Kollar så när canvasen blir tryckt med "click" vilket är vänster klick med musen så letar den om det var knappen som tröcks ned
+    // kollar så när canvasen blir tryckt med "click" vilket är vänster klick med musen så letar den om det var knappen som tröcks ned
     clickButton(xmouse, ymouse){
         
-        //Till för att trycket ska vara mera centrerad i knappen
+        // till för att trycket ska vara mera centrerad i knappen
         xmouse += 17
         ymouse += 17
         
-        //Kollar mitt punkten i knappen
+        // kollar mitt punkten i knappen
         let xmiddle = this.xpoint + (this.width/2)
         let ymiddle = this.ypoint + (this.height/2)
 
-        //Kollar avståndet från mitten av knappen
+        // kollar avståndet från mitten av knappen
         var xdistance = xmouse - xmiddle
         xdistance = Math.abs(xdistance)
 
         var ydistance = ymouse -ymiddle
         ydistance = Math.abs(ydistance)
         
-        //If statements för om man tröck i knappen 
+        // if statements för om man tröck i knappen 
         if (xdistance< this.width/2){
         
             if (ydistance< this.height/2){
@@ -75,7 +75,7 @@ function starterfunction(x,y,image,){
         c.drawImage(image, x, y);
     }
 }
-
+// funktion för att rita ut loggan
 function drawLogo(){
     var logoimg = new Image();
     logoimg.src = `./program images/Higher or lower logo.png`
@@ -84,6 +84,7 @@ function drawLogo(){
     }
 }
 
+// funktion för att skriva ut "or" mellan knapparna
 function orText(height){
     c.fillStyle = "white"
     c.font = "40px Arial"
@@ -91,32 +92,36 @@ function orText(height){
     c.fillText("OR", canvas.width/2, canvas.height - height)
 }
 
+// funktion som ser till att ny bild skapas och ritas ut samt att den andra flyttar sig
 function newImage(){
     c.clearRect(0,0,canvas.width,canvas.height)
     
-    //higherButton.drawArrow("Up arrow", c)
-    //lowerButton.drawArrow("Down arrow", c)
     drawLogo();
     orText(335);
 
+    // flyttar den högra bilden till vänster och ritar den
     leftImage = rightImage
     img1.src = `./player images/${leftImage}.png`;
     img1.onload = function(){
         
         c.drawImage(img1, 100, 100);
     }
+
+    // ritar ut allt annat som ska synas
     c.fillStyle = "White"
     c.font = "70px Arial"
     c.textAlign = "center"
+
     c.fillText(`${leftImage}`, 342.5, canvas.height - 200)
     c.fillText(`${pFact.playervalue[rightImage]} 000 000 €`, 342.5 ,canvas.height - 100)
+    
     lowerButton.draw("Lower button");
     higherButton.draw("Higher button");
 
     let randomNumber = Math.floor(Math.random() * pFact.playerArray.length);
     rightImage = pFact.playerArray[randomNumber]
+
     c.fillText(`${rightImage}`, canvas.width - 342.5, canvas.height - 200)
-    console.log(rightImage, leftImage); 
 
     img2.src = `./player images/${rightImage}.png`;
 
@@ -127,6 +132,7 @@ function newImage(){
 }
 
 function clickFunction(event){
+    // Kollar vilka kordinater man trycker på och om det är innanför någon av knapparna
     const rect = canvas.getBoundingClientRect()
     const xpos = event.clientX - rect.left
     const ypos = event.clientY - rect.top
@@ -147,6 +153,7 @@ function clickFunction(event){
 
 
 function Higher(){
+    // kollar om man gissar rätt och fortsätter spelet vid rätt gissning
     if(pFact.playervalue[leftImage] < pFact.playervalue[rightImage]){
     scoreCount += 1
     newImage();
@@ -160,6 +167,7 @@ function Higher(){
     else{
         c.clearRect(0,0,canvas.width,canvas.height)
         
+        // ritar ut GAME OVER
         c.fillStyle = "White"
         c.font = "90px Arial"
         c.textAlign = "center"
@@ -174,6 +182,7 @@ function Higher(){
 }
 
 function Lower(){
+    // kollar om man gissar rätt och fortsätter spelet vid rätt gissning
     if(pFact.playervalue[leftImage] > pFact.playervalue[rightImage]){
         scoreCount += 1
         newImage();
@@ -185,6 +194,7 @@ function Lower(){
     else{
         c.clearRect(0,0,canvas.width,canvas.height)
         
+        // ritar ut GAME OVER
         c.fillStyle = "White"
         c.font = "90px Arial"
         c.textAlign = "center"
@@ -198,28 +208,32 @@ function Lower(){
     }
 }
 
-//funktion för hjälp knappen i programmet
+// funktion för hjälp knappen i programmet
 function Help(){
+    // ritar ut hjälprutan
     var helpImage = new Image()
     helpImage.src = "./program images/Help image.png"
     helpImage.onload = function(){
         
         c.drawImage(helpImage, canvas.width/2 - 500, canvas.height/2 - 400);
     }
-    var closeButton = new Button()
-    closeButton.draw("Close button")
+    // timeouten är till för att knappen inte ska ritas ut före rutan och hamna bakom
+    setTimeout(() => {  closeButton.draw("Close button"); }, 5);
+
+    // gör så att de andra knapparna blir urkopplade medans hjälprutan är uppe
     canvas.addEventListener("click", Closefunction)
+    canvas.removeEventListener("click", clickFunction)
 }
 
-//funktion för att stänga ned hjälp rutan
-function Closefunction(){
+// funktion för att stänga ned hjälp rutan
+function Closefunction(event){
     const rect = canvas.getBoundingClientRect()
     const xpos = event.clientX - rect.left
     const ypos = event.clientY - rect.top
     
-    let help = helpButton.clickButton(xpos,ypos)
+    var help = helpButton.clickButton(xpos,ypos)
     if (help === true){
-        //tar bort allt och ritar allt som ska vara med i början
+        // tar bort allt och ritar allt som ska vara med i början
         c.clearRect(0,0,canvas.width, canvas.height)
 
         drawLogo();
@@ -247,35 +261,43 @@ function Closefunction(){
         c.textAlign = "center"
         c.fillText(`score: ${scoreCount}`, canvas.width - 100, canvas.height - 50)
 
+        // tar bort stäng knappens eventlistener samt ser till att de andra knapparna fungerar
+        canvas.removeEventListener("click", Closefunction)
+        canvas.addEventListener("click", clickFunction)
+
     }
 }
 
 
 //---------------------------------------------------Programmet startar-----------------------------------------------------
 
-//ritar ut higher/lower loggan
+// ritar ut higher/lower loggan
 drawLogo();
 
-//Skapar bildvariabel 1 (vänstra bilden)
+// skapar bildvariabel 1 (vänstra bilden)
 var img1 = new Image();
 
-//Skapar bildvariabel 2 (högra bilden)
+// skapar bildvariabel 2 (högra bilden)
 var img2 = new Image();
 
-//skapar knapparna och ritar ut de i programmet
-let lowerButton = new Button(canvas.width/2 - 100, canvas.height - 300, 200, 200) 
+// skapar knapparna och ritar ut de i programmet
+const lowerButton = new Button(canvas.width/2 - 100, canvas.height - 300, 200, 200) 
 lowerButton.draw("Lower button");
 
-let higherButton = new Button(canvas.width/2 - 100, canvas.height - 600, 200, 200)
+const higherButton = new Button(canvas.width/2 - 100, canvas.height - 600, 200, 200)
 higherButton.draw("Higher button");
 
-let helpButton = new Button(canvas.width-120, 20, 10, 20)
+// knappen för hjälprutan
+const helpButton = new Button(canvas.width-120, 20, 80, 101)
 helpButton.draw("Help button")
 
-//Ritar ut "or" texten mellan knapparna
+// knappen för att stänga hjälprutan
+const closeButton = new Button(canvas.width/2 - 50, 760, 90, 100)
+
+// ritar ut "or" texten mellan knapparna
 orText(335)
 
-//Ritar första bilden och skriver ut dess värde
+// ritar första bilden och skriver ut dess värde
 starterfunction(100, 100, img1)
 c.fillStyle = "White"
 c.font = "70px Arial"
@@ -286,7 +308,7 @@ leftImage = rightImage
 c.fillText(`${pFact.playervalue[leftImage]} 000 000 €`, 342.5 ,canvas.height - 100)
 c.fillText(`${leftImage}`, 342.5, canvas.height - 200)
 
-//Ritar andra bilden
+// ritar andra bilden
 starterfunction(canvas.width - 585, 100, img2)
 c.fillText(`${rightImage}`, canvas.width - 342.5, canvas.height - 200)
 console.log(pFact.playervalue[leftImage], pFact.playervalue[rightImage])
@@ -297,5 +319,5 @@ c.textAlign = "center"
 c.fillText(`score: ${scoreCount}`, canvas.width - 100, canvas.height - 50)
 
 
-//letar efter knapptryck och kör därefter en av funktionerna
+// letar efter knapptryck och kör därefter en av funktionerna
 canvas.addEventListener("click", clickFunction) 
