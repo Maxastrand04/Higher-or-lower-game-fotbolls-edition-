@@ -1,9 +1,8 @@
 // Inleder med att deklarera saker för canvas samt hämtar information från en annan JS fil för att inte ha listor härs
 
-import * as pFact from './club-information.js'
+import * as pFact from './Player information.js'
 
 let canvas = document.querySelector("canvas");
-var body = document.getElementById("body");
 
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
@@ -15,37 +14,26 @@ var rightImage;
 var leftImage;
 
 //Variabel som räknar poäng
-let scoreCount = 0
+let scoreCount = 0;
 
 // Klassen Button är till för att göra en "higher" knapp och en "lower" knapp  
 // De har samma funktioner, därmed ändras postion och färger med variabler som deklareras när de ritas ut
 class Button {
-    constructor(xpoint, ypoint, height, width, color){
-        this.xpoint = xpoint
-        this.ypoint = ypoint
-        this.height = height
-        this.width = width
-        this.color = color
-    }
-
-    // ritar ut higher/lower pilarna med variabeln typeOfArrow
-    drawArrow(typeOfArrow){
-        var xposition = this.xpoint
-        var Arrow = new Image();
-        Arrow.src = `./program images/arrows/${typeOfArrow}.png`
-        Arrow.onload = function(){
-            c.drawImage(Arrow, xposition, 300)
-        }
+    constructor(xpoint, ypoint, height, width){
+        this.xpoint = xpoint;
+        this.ypoint = ypoint;
+        this.height = height;
+        this.width = width;
     }
 
     //ritar ut knappen
     draw(typeOfButton){
-        var xposition = this.xpoint
-        var yposition = this.ypoint
-        var button = new Image()
-        button.src = `./program images/buttons/${typeOfButton}.png`
+        var xposition = this.xpoint;
+        var yposition = this.ypoint;
+        var button = new Image();
+        button.src = `./program images/buttons/${typeOfButton}.png`;
         button.onload = function(){
-            c.drawImage(button, xposition, yposition)
+            c.drawImage(button, xposition, yposition);
         }
     }
     //Kollar så när canvasen blir tryckt med "click" vilket är vänster klick med musen så letar den om det var knappen som tröcks ned
@@ -78,11 +66,11 @@ class Button {
 
 
 // funktion som slumpar de första två spelarna när sidan startas 
-function starterfunction(x,y,image, imageVariable){
+function starterfunction(x,y,image,){
     var randomNumber = Math.floor(Math.random() * pFact.playerArray.length);
     rightImage = pFact.playerArray[randomNumber] 
     
-    image.src = `./images/${rightImage}.png`;
+    image.src = `./player images/${rightImage}.png`;
     image.onload = function(){
         c.drawImage(image, x, y);
     }
@@ -94,16 +82,6 @@ function drawLogo(){
     logoimg.onload = function(){
         c.drawImage(logoimg, canvas.width/2 - 141.5, 50)
     }
-}
-
-//Funktion för linjen i mitten av programmet
-function divideLineV2(){
-    c.beginPath()
-    c.lineWidth = 4;
-    c.moveTo((canvas.width/2) - 2, 0)
-    c.lineTo((canvas.width/2) - 2, canvas.height)
-    c.stroke()
-    c.closePath()
 }
 
 function orText(height){
@@ -122,23 +100,25 @@ function newImage(){
     orText(335);
 
     leftImage = rightImage
-    img1.src = `./images/${rightImage}.png`;
+    img1.src = `./player images/${leftImage}.png`;
     img1.onload = function(){
         
         c.drawImage(img1, 100, 100);
     }
-    c.fillStyle = "Black"
+    c.fillStyle = "White"
     c.font = "70px Arial"
     c.textAlign = "center"
+    c.fillText(`${leftImage}`, 342.5, canvas.height - 200)
     c.fillText(`${pFact.playervalue[rightImage]} 000 000 €`, 342.5 ,canvas.height - 100)
     lowerButton.draw("Lower button");
     higherButton.draw("Higher button");
 
     let randomNumber = Math.floor(Math.random() * pFact.playerArray.length);
     rightImage = pFact.playerArray[randomNumber]
-    console.log(rightImage, pFact.playervalue[rightImage]); 
+    c.fillText(`${rightImage}`, canvas.width - 342.5, canvas.height - 200)
+    console.log(rightImage, leftImage); 
 
-    img2.src = `./images/${rightImage}.png`;
+    img2.src = `./player images/${rightImage}.png`;
 
     c.fillstyle = "white"
     c.font = "30px Arial"
@@ -153,11 +133,15 @@ function clickFunction(event){
 
     let higher = higherButton.clickButton(xpos, ypos );
     let lower = lowerButton.clickButton(xpos, ypos );
+    let help = helpButton.clickButton(xpos,ypos)
     if ( higher === true ){
         Higher()
     }
     if (lower === true ){
         Lower()
+    }
+    if (help === true){
+        Help()
     }
 }
 
@@ -214,6 +198,58 @@ function Lower(){
     }
 }
 
+//funktion för hjälp knappen i programmet
+function Help(){
+    var helpImage = new Image()
+    helpImage.src = "./program images/Help image.png"
+    helpImage.onload = function(){
+        
+        c.drawImage(helpImage, canvas.width/2 - 500, canvas.height/2 - 400);
+    }
+    var closeButton = new Button()
+    closeButton.draw("Close button")
+    canvas.addEventListener("click", Closefunction)
+}
+
+//funktion för att stänga ned hjälp rutan
+function Closefunction(){
+    const rect = canvas.getBoundingClientRect()
+    const xpos = event.clientX - rect.left
+    const ypos = event.clientY - rect.top
+    
+    let help = helpButton.clickButton(xpos,ypos)
+    if (help === true){
+        //tar bort allt och ritar allt som ska vara med i början
+        c.clearRect(0,0,canvas.width, canvas.height)
+
+        drawLogo();
+        lowerButton.draw("Lower button")
+        higherButton.draw("Higher button")
+        helpButton.draw("Help button")
+        orText(335)
+
+        starterfunction(100, 100, img1)
+        c.fillStyle = "White"
+        c.font = "70px Arial"
+        c.textAlign = "center"
+
+        leftImage = rightImage
+
+        c.fillText(`${pFact.playervalue[leftImage]} 000 000 €`, 342.5 ,canvas.height - 100)
+        c.fillText(`${leftImage}`, 342.5, canvas.height - 200)
+
+        starterfunction(canvas.width - 585, 100, img2)
+        c.fillText(`${rightImage}`, canvas.width - 342.5, canvas.height - 200)
+        console.log(pFact.playervalue[leftImage], pFact.playervalue[rightImage])
+
+        c.fillstyle = "white"
+        c.font = "30px Arial"
+        c.textAlign = "center"
+        c.fillText(`score: ${scoreCount}`, canvas.width - 100, canvas.height - 50)
+
+    }
+}
+
 
 //---------------------------------------------------Programmet startar-----------------------------------------------------
 
@@ -227,27 +263,32 @@ var img1 = new Image();
 var img2 = new Image();
 
 //skapar knapparna och ritar ut de i programmet
-let lowerButton = new Button(canvas.width/2 - 100, canvas.height - 300, 200, 200, "red") 
-lowerButton.draw("Lower button",c);
+let lowerButton = new Button(canvas.width/2 - 100, canvas.height - 300, 200, 200) 
+lowerButton.draw("Lower button");
 
-let higherButton = new Button(canvas.width/2 - 100, canvas.height - 600, 200, 200, 'green')
-higherButton.draw("Higher button", c);
+let higherButton = new Button(canvas.width/2 - 100, canvas.height - 600, 200, 200)
+higherButton.draw("Higher button");
+
+let helpButton = new Button(canvas.width-120, 20, 10, 20)
+helpButton.draw("Help button")
 
 //Ritar ut "or" texten mellan knapparna
 orText(335)
 
 //Ritar första bilden och skriver ut dess värde
-starterfunction(100, 100, img1, leftImage)
-c.fillStyle = "Black"
+starterfunction(100, 100, img1)
+c.fillStyle = "White"
 c.font = "70px Arial"
 c.textAlign = "center"
 
 leftImage = rightImage
 
 c.fillText(`${pFact.playervalue[leftImage]} 000 000 €`, 342.5 ,canvas.height - 100)
+c.fillText(`${leftImage}`, 342.5, canvas.height - 200)
 
 //Ritar andra bilden
-starterfunction(canvas.width - 585, 100, img2, rightImage)
+starterfunction(canvas.width - 585, 100, img2)
+c.fillText(`${rightImage}`, canvas.width - 342.5, canvas.height - 200)
 console.log(pFact.playervalue[leftImage], pFact.playervalue[rightImage])
 
 c.fillstyle = "white"
@@ -255,35 +296,6 @@ c.font = "30px Arial"
 c.textAlign = "center"
 c.fillText(`score: ${scoreCount}`, canvas.width - 100, canvas.height - 50)
 
-//Ritar ut pilarna över knapparna
-//higherButton.drawArrow("Up arrow", c)
-//lowerButton.drawArrow("Down arrow", c)
 
 //letar efter knapptryck och kör därefter en av funktionerna
 canvas.addEventListener("click", clickFunction) 
-
-
-//Gör att knappen blir mörkare vid nedtryck
-/*canvas.addEventListener("mousedown", (event) =>{
-    const rect = canvas.getBoundingClientRect()
-    const xpos = event.clientX - rect.left
-    const ypos = event.clientY - rect.top
-    let higher = higherButton.clickButton(xpos, ypos );
-    let lower = lowerButton.clickButton(xpos, ypos );
-    if ( higher === true){
-        higherButton.draw("Higher button dark")
-    }
-    else if (lower === true){
-        lowerButton.draw("Lower button dark")
-
-    }
-})*/
-//när knappen släpps så återgår den till sitt ordinarie färg
-/*
-canvas.addEventListener("mouseup", higherButton.draw("Higher button"))
-canvas.addEventListener("mouseup", higherButton.draw("Lower button"))
-*/    
-    //lowerButton.drawArrow("Down arrow", c)
-    //higherButton.drawArrow("Up arrow", c)
-
-
