@@ -226,7 +226,10 @@ const playervalue = {
     "Julian Brandt": 16
     }
 
-const playerArray = ["Kylian Mbappe",
+const playerArray = [
+"Akinfenwa",
+"Anthony Modeste",  
+"Kylian Mbappe",
 "Erling Haaland", 
 "Vinicius Junior", 
 "Mohamed Salah",
