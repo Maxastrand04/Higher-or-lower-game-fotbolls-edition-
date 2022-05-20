@@ -41,7 +41,7 @@ class Button {
         
         // till för att trycket ska vara mera centrerad i knappen
         xmouse += 17
-        ymouse += 17
+        ymouse -= 20
         
         // kollar mitt punkten i knappen
         let xmiddle = this.xpoint + (this.width/2)
@@ -117,6 +117,7 @@ function newImage(){
     
     lowerButton.draw("Lower button");
     higherButton.draw("Higher button");
+    helpButton.draw("Help button");
 
     let randomNumber = Math.floor(Math.random() * pFact.playerArray.length);
     rightImage = pFact.playerArray[randomNumber]
@@ -231,8 +232,8 @@ function Closefunction(event){
     const xpos = event.clientX - rect.left
     const ypos = event.clientY - rect.top
     
-    var help = helpButton.clickButton(xpos,ypos)
-    if (help === true){
+    var close = closeButton.clickButton(xpos,ypos)
+    if (close === true){
         // tar bort allt och ritar allt som ska vara med i början
         c.clearRect(0,0,canvas.width, canvas.height)
 
@@ -242,17 +243,26 @@ function Closefunction(event){
         helpButton.draw("Help button")
         orText(335)
 
-        starterfunction(100, 100, img1)
+        
         c.fillStyle = "White"
         c.font = "70px Arial"
         c.textAlign = "center"
 
-        leftImage = rightImage
-
+        //leftImage = rightImage
+        img1.src = `./player images/${leftImage}.png`
+        img1.onload = function(){
+        
+            c.drawImage(img1, 100, 100);
+        }    
         c.fillText(`${pFact.playervalue[leftImage]} 000 000 €`, 342.5 ,canvas.height - 100)
         c.fillText(`${leftImage}`, 342.5, canvas.height - 200)
 
-        starterfunction(canvas.width - 585, 100, img2)
+        img2.src =`./player images/${rightImage}.png`
+        img2.onload = function(){
+        
+            c.drawImage(img2, canvas.width - 585, 100);
+        }
+    
         c.fillText(`${rightImage}`, canvas.width - 342.5, canvas.height - 200)
         console.log(pFact.playervalue[leftImage], pFact.playervalue[rightImage])
 
@@ -292,7 +302,7 @@ const helpButton = new Button(canvas.width-120, 20, 80, 101)
 helpButton.draw("Help button")
 
 // knappen för att stänga hjälprutan
-const closeButton = new Button(canvas.width/2 - 50, 760, 90, 100)
+const closeButton = new Button(canvas.width/2 - 50, 760, 50, 100)
 
 // ritar ut "or" texten mellan knapparna
 orText(335)
