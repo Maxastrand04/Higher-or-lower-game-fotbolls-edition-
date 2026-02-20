@@ -1,3 +1,5 @@
+# Higher/lower game in programming 1
+
 This is a first project made during my second year of highschool,
 
 It is a game meant to be similiar to this: https://www.higherorlowergame.com/
